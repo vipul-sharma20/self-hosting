@@ -1,0 +1,15 @@
+services:
+  uptime-kuma:
+    image: 'louislam/uptime-kuma:1'
+    environment:
+      - SERVICE_FQDN_UPTIME-KUMA_3001
+    volumes:
+      - 'uptime-kuma:/app/data'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - extra/healthcheck
+      interval: 2s
+      timeout: 10s
+      retries: 15
+
