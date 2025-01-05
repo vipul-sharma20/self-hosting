@@ -1,0 +1,13 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    stdin_open: true
+    tty: true
+    ports:
+      - '25575:25575'
+    volumes:
+      - '/home/opc/data:/data'
+    environment:
+      EULA: 'TRUE'
+    restart: unless-stopped
+
