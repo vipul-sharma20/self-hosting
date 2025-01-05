@@ -1,0 +1,34 @@
+services:
+  nextcloud:
+    image: 'nextcloud:29.0.5'
+    environment:
+      - SERVICE_FQDN_NEXTCLOUD
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - POSTGRES_HOST=${PG_HOST:-localhost}
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=postgres
+      # Put below value in quotes if you plan to put password directly AND it
+      # has quotes in it
+      - POSTGRES_PASSWORD=${PG_PASSWORD:-default}
+      - NC_setup_create_db_user=false
+    volumes:
+      - '/mnt/shared_storage/nextcloud_config:/var/www/html/config'
+      - '/mnt/shared_storage/nextcloud:/var/www/html/data'
+    labels:
+      - traefik.enable=true
+      # Fix domain below
+      - traefik.http.routers.nextcloud.rule=Host(`nextcloud.domain.com`)
+      - traefik.http.services.nextcloud.loadbalancer.server.port=80
+      - traefik.http.routers.nextcloud.middlewares=cspHeader@docker
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:80'
+      interval: 2s
+      timeout: 10s
+      retries: 15
+
