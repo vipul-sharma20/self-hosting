@@ -1,0 +1,9 @@
+version: '3'
+services:
+  quartz:
+    image: vipul20/quartz:latest
+    ports:
+      - "3009:8080"
+    volumes:
+      - ./content:/usr/src/app/content
+
