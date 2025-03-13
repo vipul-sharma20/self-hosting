@@ -1,0 +1,18 @@
+services:
+  open-webui:
+    image: 'ghcr.io/open-webui/open-webui:main'
+    volumes:
+      - 'open-webui/data:/app/backend/data'
+    ports:
+      - '3006:8080'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:8080'
+      interval: 5s
+      timeout: 30s
+      retries: 10
+volumes:
+  open-webui: null
