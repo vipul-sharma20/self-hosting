@@ -9,7 +9,7 @@ services:
       - /home/pi/jellyfin-data/config:/config
       - /home/pi/jellyfin-data/cache:/cache
       - /home/pi/jellyfin-data/fonts:/usr/local/share/fonts/custom:ro
-      - /mnt/external-mount:/media/external-mount:ro
+      - /mnt/external_hdd/radarr/movies:/media/movies:ro
     restart: unless-stopped
     environment:
       - JELLYFIN_PublishedServerUrl=http://example.com
