@@ -1,0 +1,100 @@
+services:
+  radarr:
+    image: linuxserver/radarr:latest
+    ports:
+      - "7878:7878"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/data/servarr/radarr-data/radarr-config:/config
+      - /mnt/external_hdd/media:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/data/servarr/sonarr-data/config:/config
+      - /mnt/external_hdd/media:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+
+  bazarr:
+    image: linuxserver/bazarr:latest
+    ports:
+      - "6767:6767"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/data/servarr/bazarr-data/config:/config
+      - /mnt/external_hdd/media:/data
+    restart: unless-stopped
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    ports:
+      - "9696:9696"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/data/servarr/prowlarr-data/config:/config
+    restart: unless-stopped
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8080
+      - WEBUI_HOST_HEADER_VALIDATION=false
+    volumes:
+      - /mnt/storage/data/servarr/qbittorrent-data/config:/config
+      - /mnt/storage/data/servarr/qbittorrent-data/custom-scripts:/custom-cont-init.d:ro
+      - /mnt/external_hdd/media:/data
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
+
+  flaresolverr:
+    image: flaresolverr/flaresolverr:latest
+    environment:
+      - TZ=Asia/Kolkata
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
+
+  warp-socks:
+    image: monius/docker-warp-socks:latest
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "1080:9091"
+    volumes:
+      - /mnt/storage/data/servarr/warp-data:/var/lib/cloudflare-warp
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
